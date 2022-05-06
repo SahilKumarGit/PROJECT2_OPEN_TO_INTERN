@@ -14,7 +14,7 @@ const createIntern = async (req, res) => {
         name,
         email,
         mobile,
-        collegeId
+        collegeName
     } = data
 
     //👇 validate it's values
@@ -23,14 +23,12 @@ const createIntern = async (req, res) => {
     if (!isValidEmail(email.trim())) return unSuccess(res, 400, "Please enter a valid email address!")
     if (!mobile || !mobile.trim()) return unSuccess(res, 400, "Intern's mobile must be required!")
     if (!isValidMobile(mobile.trim())) return unSuccess(res, 400, "Please enter a valid phone number!")
-    if (!collegeId || !collegeId.trim()) return unSuccess(res, 400, "Intern's collegeId must be required!")
-    //👇 check valid id OR note
-    if (!isValid_Id(collegeId.trim())) return unSuccess(res, 400, "CollegeId is invalid, Try with a valid collegeId!")
+    if (!collegeName || !collegeName.trim()) return unSuccess(res, 400, "Intern's collegeName must be required!")
 
 
     //👇 check if college id is exist in our collection OR not
     const inCollegeDb = await collegeModule.findOne({
-        _id: collegeId.trim(),
+        name: collegeName.trim(),
         isDeleted: false
     }).catch(_ => null)
     if (!inCollegeDb) return unSuccess(res, 404, "The college where you belong currently does not exist!")
@@ -56,7 +54,7 @@ const createIntern = async (req, res) => {
         name,
         email,
         mobile,
-        collegeId
+        collegeId: inCollegeDb._id
     }
 
 
